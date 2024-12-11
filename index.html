@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quiz Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #4facfe, #00f2fe);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            animation: fadeIn 1s ease;
+        }
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .button {
+            padding: 15px 50px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: #4facfe;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #00f2fe;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 15px;
+            animation: slideIn 0.5s ease;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .options button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            background: #74b9ff;
+            color: white;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .options button:hover {
+            transform: scale(1.1);
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 16px;
+            animation: fadeIn 1s ease;
+        }
+        .members ul {
+            list-style: none;
+            padding: 0;
+        }
+        .members ul li {
+            font-size: 16px;
+            margin: 5px 0;
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+        ul li {
+            list-style: none;
+            text-align: justify;
+        }
+        .members ul li::before {
+            content: '\2714';
+            margin-right: 10px;
+            color: #4facfe;
+            list-style: none;
+        }
+        .timer {
+            font-weight: bold;
+        }
+        .lifeline {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+        }
+        .lifeline button {
+            padding: 8px 15px;
+            background: #ff7675;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .lifeline button:disabled {
+            background: #dcdde1;
+            cursor: not-allowed;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+        .bold {
+            font-weight: bold;
+            font-size: large;
+        }
+.result {
+    background-color: #f8f8f8;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 400px;
+    margin: 50px auto;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.result h2 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.result p {
+    font-size: 1.2em;
+    color: #666;
+    margin: 10px 0;
+}
+
+.result .button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.result .button:hover {
+    background-color: #45a049;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container" id="menu">
+        <div class="title">Chapter 4 Quiz Game</div>
+        <button class="button" onclick="startGame()">Play</button>
+        <button class="button" onclick="showMembers()">Members</button>
+    </div>
+
+    <div class="container" id="quiz" style="display: none;">
+        <div id="question" class="question"></div>
+        <div id="options" class="options"></div>
+        <div class="lifeline">
+            <button id="lifeline-5050" onclick="useLifeline('5050')">50/50</button>
+            <button id="lifeline-skip" onclick="useLifeline('skip')">Skip</button>
+        </div>
+        <div id="footer" class="footer">
+            <span id="progress"></span> - Time: <span id="timer" class="timer"></span>
+        </div>
+    </div>
+
+    <div class="container" id="members" style="display: none;">
+        <div class="title">Chapter 4</div>
+        <p class="bold">Members</p>
+        <ul>
+            <li>Noeme B. Gajo</li>
+            <li>John Armcel Gadbillao</li>
+            <li>Benjie Robles</li>
+            <li>Min Faith Viel Arambulo</li>
+        </ul>
+        <button class="button" onclick="backToMenu()">Back</button>
+    </div>
+
+    <script>
+        const questions = [
+            { question: "1. It refers to a property that can take on different values categories which cannot be predicted with certainty.", correct: "Variable", options: ["Variable", "Constant", "Set", "Data"] },
+            { question: "2. The x or the ___ is also called as explanation variable.", correct: "Independent Variable", options: ["Dependent Variable", "Independent Variable", "Discrete Variable", "Data"] },
+            { question: "3. The y or the ___ is also called as response variable.", correct: "Dependent Variable", options: ["Independent Variable", "Categorical Data", "Dependent Variable", "Data"] },
+            { question: "4. It is a collection of data", correct: "Data set", options: ["Data set", "Variable", "Continuous Data", "Median"] },
+            { question: "5. Give the two categories of data.", correct: "categorical and continuous data", options: ["continuous and finite", "categorical and continuous data", "finite and discrete", "continuous and infinite"] },
+            { question: "6. Find the mean of 39,40,41,40,38.", correct: "40", options: ["37", "40", "38", "41"] },
+            { question: "7. Find the median of 39,40,41,40,38.", correct: "40", options: ["38", "37", "40", "41"] },
+            { question: "8. What is the mode of 39,40,41,40,38?", correct: "40", options: ["38", "40", "41", "39"] },
+            { question: "9. The quantities or qualities measured or observed that are to be collected or analyzed.", correct: "Data", options: ["Variable", "Data", "Set", "Data set"] },
+            { question: "10. This variable includes finite or countably finite.", correct: "Discrete variable", options: ["Continuous variable", "Discrete variable", "Independent variable", "Dependent variable"] },
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let timer;
+        const timeLimit = 15;
+        let remainingTime = timeLimit;
+        let lifelines = { '5050': true, skip: true };
+
+        const quiz = document.getElementById("quiz");
+        const menu = document.getElementById("menu");
+        const members = document.getElementById("members");
+        const questionElement = document.getElementById("question");
+        const optionsElement = document.getElementById("options");
+        const footerElement = document.getElementById("footer");
+        const progressElement = document.getElementById("progress");
+        const timerElement = document.getElementById("timer");
+
+        function startGame() {
+            menu.style.display = "none";
+            quiz.style.display = "block";
+            showQuestion();
+        }
+
+        function showMembers() {
+            menu.style.display = "none";
+            members.style.display = "block";
+        }
+
+        function backToMenu() {
+            members.style.display = "none";
+            menu.style.display = "block";
+        }
+
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                endGame();
+                return;
+            }
+
+            const current = questions[currentQuestion];
+            questionElement.textContent = current.question;
+
+            optionsElement.innerHTML = "";
+            progressElement.textContent = `${currentQuestion + 1}/${questions.length}`;
+
+            const options = shuffle([...current.options]);
+
+            options.forEach((option) => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.addEventListener("click", () => handleAnswer(button, option));
+                optionsElement.appendChild(button);
+            });
+
+            remainingTime = timeLimit;
+            startTimer();
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timer = setInterval(() => {
+                remainingTime--;
+                timerElement.textContent = `${remainingTime}s`;
+
+                if (remainingTime <= 5) {
+                    timerElement.style.color = "red";
+                    timerElement.style.animation = "pulse 0.5s infinite alternate";
+                } else {
+                    timerElement.style.color = "black";
+                    timerElement.style.animation = "none";
+                }
+
+                if (remainingTime <= 0) {
+                    clearInterval(timer);
+                    handleAnswer(null);
+                }
+            }, 1000);
+        }
+
+        function handleAnswer(button, selectedOption) {
+            clearInterval(timer);
+            const current = questions[currentQuestion];
+            const buttons = optionsElement.querySelectorAll("button");
+
+            buttons.forEach(btn => {
+                if (btn.textContent === current.correct) {
+                    btn.style.backgroundColor = "green";
+                } else {
+                    btn.style.backgroundColor = "red";
+                }
+                btn.disabled = true;
+            });
+
+            if (selectedOption === current.correct) {
+                score++;
+            }
+
+            setTimeout(() => {
+                currentQuestion++;
+                showQuestion();
+            }, 1500);
+        }
+
+        function useLifeline(type) {
+            if (!lifelines[type]) return;
+
+            if (type === '5050') {
+                const current = questions[currentQuestion];
+                const incorrectOptions = optionsElement.querySelectorAll("button");
+
+                let removed = 0;
+                incorrectOptions.forEach(btn => {
+                    if (btn.textContent !== current.correct && removed < 2) {
+                        btn.style.visibility = "hidden";
+                        removed++;
+                    }
+                });
+            }
+
+            if (type === 'skip') {
+                currentQuestion++;
+                showQuestion();
+            }
+
+            lifelines[type] = false;
+            document.getElementById(`lifeline-${type}`).disabled = true;
+        }
+
+        function endGame() {
+    quiz.style.display = "none";
+    const message = score === 10 ? "Congrats you Aced it!" : (score >= 6 ? "Not Bad" : "You need some more improvements!");
+    
+    // Display final score and message
+    const resultContainer = document.createElement('div');
+    resultContainer.classList.add('result');
+    resultContainer.innerHTML = `
+        <h2>Game Over</h2>
+        <p>${message}</p>
+        <p>Your score: ${score}/${questions.length}</p>
+        <button class="button" onclick="location.reload()">Play Again</button>
+    `;
+    document.body.appendChild(resultContainer);
+}
+
+
+    </script>
+</body>
+</html>
